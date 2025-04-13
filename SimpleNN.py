@@ -32,7 +32,6 @@ class NN:
     def d_relu(self,z):
         return (z > 0).astype(float)
 
-
     def backprop(self, pred, target):
 
         grads_W = {}
@@ -52,33 +51,28 @@ class NN:
             grads_W[l] = delta @ a_prev.T
             grads_b[l] = delta
 
-
             if l > 0:
                 delta = self.W[l].T @ delta
         return grads_W, grads_b
 
-    def update(self, grads_W, grads_b, step_size):
+    def update(self, grads_W, grads_b, step_size = 10**-6):
         for l in range(len(self.layers) - 1):
             self.W[l] -= step_size * grads_W[l]
             self.b[l] -= step_size * grads_b[l]
 
-    def train(self, training_data, N, learning_rate = 10**-6, stats = False):
+    def train(self, training_data, N, stats = False):
         if stats:
             L = np.empty(N)
         for n in tqdm(range(N)):
             x, y = random.choice(training_data)
             y_hat = self.forward(x)
             grads_W, grads_b = self.backprop(y_hat,y)
-            self.update(grads_W,grads_b, step_size=learning_rate)
+            self.update(grads_W,grads_b)
             if stats:
                 L[n] = np.mean((y_hat - y)**2)
         
         if stats:
             return L
-                
-
-
-
 
 #%%
 model = NN(np.array([2, 42, 32, 50, 2]), output_activation=lambda x: x)  # identity output for regression
@@ -113,7 +107,7 @@ def plot_loss(loss_values, model):
 # L = model.train(train, 100000, stats=True)
 n = 10000
 rate = 10*-4
-L_crazy = model.train(crazy_train_normalized, N=n, stats=True)
+L_crazy = model.train(crazy_train_normalized, 1000, stats=True)
 L_crazy_simpler = model_simpler.train(crazy_train_normalized, 1000, stats=True)
 plot_loss(L_crazy, "complex model")
 plot_loss(L_crazy_simpler, "simpler model")
