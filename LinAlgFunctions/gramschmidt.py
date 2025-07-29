@@ -1,13 +1,14 @@
 #%%
 from sympy import *
+from typing import Callable, List
 init_printing()
-
+#%%
 t = symbols('t')
-def inner(f,g):
+def inner(f,g, interval: tuple=(-pi, pi)):
     # raise NotImplementedError("Inner product not implemented")
-    return integrate(f*conjugate(g),(t,-1,1))
+    return integrate(f*conjugate(g),(t,-pi,pi))
 
-def GramSchmidtAlgorithm(v: list, inner: callable, normal = False):
+def GramSchmidtAlgorithm(v: List, inner: Callable, normal: bool = False):
     E = [] #The ortahogonal basis vectors
     for n in range(len(v)):
         if n == 0:
@@ -18,10 +19,17 @@ def GramSchmidtAlgorithm(v: list, inner: callable, normal = False):
             E[n] = E[n]/sqrt(inner(E[n],E[n]))
     return Matrix(E)
 
-
+def represent(v: List, E: List, inner: Callable):
+    return sum([inner(v, E[k]) * E[k] for k in range(len(E))])
+#%%
 if __name__ == "__main__":
-    p_2 = [1,t,t**2]
-    p_3 = [1,t,t**2,t**3]
-    O_2 = GramSchmidtAlgorithm(p_2,inner,normal=True)
-    O_3 = GramSchmidtAlgorithm(p_3,inner,normal=True)
-    print(symbols("O_2"), O_2, symbols("O_3"), O_3)
+    p_5 = [1,t,t**2, t**3,t**4, t**5]
+    f = sin(t)
+
+    E = GramSchmidtAlgorithm(p_5, inner, normal=True)
+    proj = represent(f, E, inner)
+
+    print("Orthogonal basis:")
+    display(E.evalf())
+    print("Projection of f onto the space spanned by the basis:")
+    print(proj.evalf())

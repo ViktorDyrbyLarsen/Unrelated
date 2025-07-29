@@ -27,3 +27,19 @@ for idx, conversation in enumerate(conversations):
         kept += 1
 
 print(f"Filtered {kept} conversations into '{filtered_folder}' folder.")
+#%%
+from sympy import *
+init_printing()
+#%%
+b,c = symbols('b c')
+x1, y1, z1 = symbols('x1 y1 z1')
+x2, y2, z2 = symbols('x2 y2 z2')
+def L(x,y,z):
+    return (2*x  - 4*y + 3*z + b,6*x + c*x*y*z)
+
+# %%
+display(L(x1 + x2, y1 + y2, z1 + z2)[1].expand())
+display(L(x1, y1, z1)[1] + L(x2, y2, z2)[1])
+
+# %%
+display(((x1 + x2)*(y1 + y2)).expand() - (x1*y1 + x2*y2))

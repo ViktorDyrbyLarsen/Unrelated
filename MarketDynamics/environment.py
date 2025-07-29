@@ -39,16 +39,15 @@ class MarketEnv:
         # demand: how much the agent wants this resource (float, dynamic)
         # income: resource flow to the agent per step (optional)
         # needs: whether this resource is required by the agent (binary)
-        self.attribute_schema = {
-                                 "inventory": {"idx": 0, "type": "float"} ,
-                                 "demand": {"idx": 1, "type": "float"}    ,
-                                 "income": {"idx": 2, "type": "float"}    ,
-                                 "needs": {"idx": 3, "type": "bool"}      ,
-                                }
+        self.attribute_idx = {"inventory": 0,
+                              "demand": 1,
+                              "income": 2,
+                              "needs": 3
+                         }
         
 
         # Defining the environment
-        self.env = torch.zeros((n_agents, n_ressources, len(self.attribute_schema)), device=device, dtype=self.dtype)
+        self.env = torch.zeros((self.n_agents, self.n_ressources, len(self.attribute_idx)), device=self.device, dtype=self.dtype)
 
     def get_attribute_table(self, attribute_to_get: str | int) -> torch.Tensor:
         """
@@ -65,13 +64,13 @@ class MarketEnv:
                 )
 
             if isinstance(attribute_to_get, str):
-                if attribute_to_get not in self.attribute_schema:
+                if attribute_to_get not in self.attribute_idx:
                     raise KeyError(
-                        f"'{attribute_to_get}' not found in attribute_idx. Available keys: {list(self.attribute_schema.keys())}"
+                        f"'{attribute_to_get}' not found in attribute_idx. Available keys: {list(self.attribute_idx.keys())}"
                     )
         
         if isinstance(attribute_to_get, str):
-            attribute_to_get = self.attribute_schema[attribute_to_get["idx"]]
+            attribute_to_get = self.attribute_idx[attribute_to_get]
         
         return self.env[:,:,attribute_to_get]
     
@@ -92,13 +91,37 @@ class MarketEnv:
                 )
 
             if isinstance(attributes_to_set, str):
-                if attributes_to_set not in self.attribute_schema:
+                if attributes_to_set not in self.attribute_idx:
                     raise KeyError(
-                        f"'{attributes_to_set}' not found in attribute_idx. Available keys: {list(self.attribute_schema.keys())}"
+                        f"'{attributes_to_set}' not found in attribute_idx. Available keys: {list(self.attribute_idx.keys())}"
                     )
         
         if isinstance(attributes_to_set, str):
-            attributes_to_set = self.attribute_schema[attributes_to_set]
+            attributes_to_set = self.attribute_idx[attributes_to_set]
 
         self.env[:,:,attributes_to_set] = attribute_matrix
    
+    def get_actor(self, idx: int) -> torch.Tensor:
+        """
+        Returns attributes for a given actor
+
+        Args:
+        idx (int): The actor to inspect
+        """
+        return self.env[idx,:,:]
+
+    def set_actor(self, attributes_to_set: dict) -> None:
+        for key in attributes_to_set:   
+
+    
+
+    def reset(self) -> None:
+        self.env = torch.zeros((self.n_agents, self.n_ressources, len(self.attribute_idx)), device=self.device, dtype=self.dtype)
+
+if __name__ == "__main__":
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(device)
+    env = MarketEnv(n_agents=3, n_ressources=3, device=device)
+    print(env.get_attribute_table("inventory"))
+    attribute_matrix = torch.zeros
+    env.set_attributes(attributes_to_set="inventory",=torch.tensor())
