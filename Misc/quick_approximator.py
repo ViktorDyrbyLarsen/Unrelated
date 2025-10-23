@@ -102,15 +102,15 @@ plt.grid(True)
 plt.show()
 print(revfunc(target) - approximate.state)
 # %%
-np.random.normal(0,1)
-# %%
-approximate = QuickApproximator(target=9, initial_guess=1)
-#%%
-approximate.state = 5
-
-#%%
 
 proposals = [approximate.propose() for _ in range(10000)]
 plt.hist(proposals, bins=50)
 plt.show()
 # %%
+if __name__ == "__main__":
+    target = 5
+    initial_guess = 2.3
+    func = lambda x: x**2
+    approximator = QuickApproximator(target, initial_guess, func)
+    approximator.train()
+    print(f"Final approximation: {approximator.state}")
