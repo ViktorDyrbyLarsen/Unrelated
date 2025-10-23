@@ -1,11 +1,10 @@
 #%%
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import norm
 from tqdm import tqdm
-
+from typing import Callable
 class QuickApproximator:
-    def __init__(self, target, initial_guess, func: callable, step_size=0.1, max_std = 1):
+    def __init__(self, target, initial_guess, func: Callable[[float], float], step_size=0.1, max_std = 1):
         self.func = func
         self.state = initial_guess
         self.history = [initial_guess]
@@ -46,8 +45,6 @@ class NearestNeighborFunction:
         self.values = values
         self.bounds = (linspace[0], linspace[-1])
     
-    def bounds(self):
-        return self.bounds
 
     def __call__(self, x):
         # Find the nearest neighbor in the linspace
@@ -59,11 +56,11 @@ class NearestNeighborFunction:
 
 
 
-func = lambda x: np.exp(x)
-revfunc = lambda x: np.log(x)
-target = 0.5
+func = lambda x: x**2
+revfunc = lambda x: np.sqrt(x)
+target = 5
 approximate = QuickApproximator(target, 10, func, step_size=0.1)
-approximate.value(-10), approximate.value(-15)
+# approximate.value(-10), approximate.value(-15)
 
 def GO(target, tolerance=0.0001):
     approximate.target = target
@@ -74,8 +71,8 @@ def GO(target, tolerance=0.0001):
             # print(f"Converged at iteration {i}")
             break
     return approximate.state
-
-
+print(GO(target, 0.0001))
+#%%
 
 X = np.linspace(1, np.pi, 100)
 Y = X.copy()
@@ -96,7 +93,7 @@ np.max(func(X) - Y)
 # Plot the history of states
 plt.figure(figsize=(10, 6))
 plt.plot(approximate.history)
-plt.axhline(y=revfunc(target), color='r', linestyle='--', label=f'Target sqrt({approximate.target})=3')
+plt.axhline(y=revfunc(target), color='r', linestyle='--', label=f'Target sqrt({round(approximate.target,5)})={round(np.sqrt(approximate.target),5)}')
 plt.xlabel('Iteration')
 plt.ylabel('Value')
 plt.title('Approximation History')
@@ -105,15 +102,15 @@ plt.grid(True)
 plt.show()
 print(revfunc(target) - approximate.state)
 # %%
-np.random.normal(0,1)
-# %%
-approximate = QuickApproximator(9, 1)
-#%%
-approximate.state = 5
 
-#%%
-
-proposals = [approximate.propose() for _ in range(1000)]
+proposals = [approximate.propose() for _ in range(10000)]
 plt.hist(proposals, bins=50)
 plt.show()
 # %%
+if __name__ == "__main__":
+    target = 5
+    initial_guess = 2.3
+    func = lambda x: x**2
+    approximator = QuickApproximator(target, initial_guess, func)
+    approximator.train()
+    print(f"Final approximation: {approximator.state}")
