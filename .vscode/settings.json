@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "my_dgemv_v1.h": "c",
+        "my_dgemv_v2.h": "c"
+    }
+}
