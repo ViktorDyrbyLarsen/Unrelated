@@ -1,0 +1,7 @@
+Use the template sptrans.c to implement the function. 
+
+The file test.c implements a simple program that you can use to test your code:
+
+$ make && ./test
+
+Submit your solution to Autolab when you are done testing your code.

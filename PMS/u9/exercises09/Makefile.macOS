@@ -1,0 +1,43 @@
+# Makefile for macOS - DTU course 02635/Fall 2024
+#
+# requires: - brew
+#           - OpenMP support installed via brew
+#
+OBJS 	= my_dgemv.o my_dgemv_v1.o my_dgemv_v2.o datatools.o
+
+OPT 	= -O3
+OPENMP	=
+
+# MSP tools folder
+MSPTDIR = msptools
+
+# set up things to support OpenMP on macOS
+ifdef OPENMP
+BREWDIR 	= $(shell brew --prefix)
+OMP_CPPFLAGS 	= -I$(BREWDIR)/opt/libomp/include
+OMP_CFLAGS	= -Wall -Xpreprocessor 
+OMP_LDFLAGS	= -L$(BREWDIR)/opt/libomp/lib
+OMP_LDLIBS	= -lomp
+endif
+
+CC 	= clang
+CPPFLAGS= -I$(MSPTDIR)/include/ $(OMP_CPPFLAGS)
+CFLAGS 	= -Wall -std=c99 $(OPT) $(OMP_CFLAGS) $(OPENMP)
+LDFLAGS = -L$(MSPTDIR)/lib -L. $(OMP_LDFLAGS)
+LDLIBS 	= -lmsptools -lm $(OMP_LDLIBS)
+
+
+.PHONY: all msptools clean distclean
+
+all: msptools main
+
+main: $(OBJS)
+
+msptools:
+	make --directory=msptools 
+
+clean:
+	-$(RM) *.o main
+
+distclean: clean
+	make --no-print-directory --directory=msptools clean
