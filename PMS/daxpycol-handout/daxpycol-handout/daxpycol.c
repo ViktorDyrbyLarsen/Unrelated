@@ -13,6 +13,19 @@ void daxpy_(
 
 /* Adds alpha times column i to column j */
 int daxpycol(double alpha, array2d_t *A, size_t i, size_t j) {
-    // Insert your code here
+    if (!A || i == j || i > A->shape[0] || j > A->shape[0]) return 1;
+
+    const int n = A->shape[0];
+    const int stride = A->order == RowMajor ? A->shape[1] : 1;
+    daxpy_(
+        &n, // column length
+        &alpha, // scalar alpha
+        A->order == RowMajor ? &A->val[i] : &A->val[A->shape[0] * i], // x start
+        &stride, // stride
+        A->order == RowMajor ? &A->val[j] : &A->val[A->shape[0] * j], // y start
+        &stride  // stride 
+    );
+    
+    return 0;
 }
 

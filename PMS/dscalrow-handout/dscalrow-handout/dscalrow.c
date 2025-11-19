@@ -11,6 +11,19 @@ void dscal_(
 
 /* Scale the k'th row of a two-dimensional array */
 int dscalrow(double alpha, array2d_t *A, size_t k) {
-    // Insert your code here
+    if (!A || k >= A->shape[0]) return 1;
+
+    const int rows = A->shape[0];
+    const int cols = A->shape[1];
+
+    
+    if (A->order == RowMajor) {
+        cblas_dscal(rows, alpha, A->val + k, cols)
+    }
+    else { // (if ColMajor)
+        cblas_dscal(rows, alpha, A->val + k * rows)   
+    }
+
+    return 0;
 }
 

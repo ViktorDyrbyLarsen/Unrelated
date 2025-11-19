@@ -7,16 +7,18 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 rng = torch.random.default_generator
 #%%
 
-mean = 0.01
+mean = 0
 nodes_amount = 5
 layers = 3
 nodes = torch.zeros(nodes_amount).to(device)
 
-# def graph(nodes: int, layers: int, edges: dict = None):
+# make a fake stochastic process S
+T = 200  # length
 
-# np.mean(diff)
+increments = mean + 0.05 * torch.randn(T, device=device)
+S = torch.cumsum(increments, dim=0).cpu()  # move to cpu for plotting
 
-#%%
+
 plt.plot(S, label='S')
 plt.legend()
 plt.title('Stochastic Process Simulation')
