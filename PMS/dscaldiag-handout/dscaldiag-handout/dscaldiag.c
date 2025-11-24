@@ -11,6 +11,13 @@ void dscal_(
 
 /* Scale the diagonal of a two-dimensional array */
 int dscaldiag(double alpha, array2d_t *A) {
-    // Insert your code here
+    if (!A || !A->val || A->shape[1] != A->shape[0]) return 1;
+
+    const int n = A->shape[0]; // Dimension of square matrix
+    const int stride = n + 1;
+
+    dscal_(&n, &alpha, A->val, &stride);
+
+    return 0;
 }
 

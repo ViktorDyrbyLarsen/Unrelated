@@ -15,13 +15,14 @@ int dscalrow(double alpha, array2d_t *A, size_t k) {
 
     const int rows = A->shape[0];
     const int cols = A->shape[1];
-
     
     if (A->order == RowMajor) {
-        cblas_dscal(rows, alpha, A->val + k, cols)
+        const int stride = 1;
+        cblas_dscal(cols, alpha, &A->val[k*cols], stride);
     }
     else { // (if ColMajor)
-        cblas_dscal(rows, alpha, A->val + k * rows)   
+        const int stride = rows;
+        cblas_dscal(cols, alpha, &A->val[k], stride);
     }
 
     return 0;
