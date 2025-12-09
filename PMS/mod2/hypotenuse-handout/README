@@ -1,0 +1,9 @@
+Use the template hypotenuse.c to implement the function. 
+
+The file test.c implements a simple program that you can use to test your code. First, compile the program using make: 
+
+$ make 
+
+The test program can be used with two or three input arguments: if two input arguments `x` and `y` are provided, then the test program simply calls `feval(x,y)` and prints the result. If a third input argument `zref` is provided, then the test program compares `zref` and the output of `feval`.
+
+Submit your solution to Autolab when you are done testing your code.

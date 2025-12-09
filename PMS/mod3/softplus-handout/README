@@ -1,0 +1,9 @@
+Use the template softplus.c to implement the function. 
+
+The file test.c implements a simple program that you can use to test your code. First, compile the program using make: 
+
+$ make 
+
+The test program can be used with one or two input arguments: if one input argument x is provided, then the test program simply calls feval with input x and prints the result. If a second input argument yref is provided, then the test program compares yref and the output of feval.
+
+Submit your solution to Autolab when you are done testing your code.
