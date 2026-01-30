@@ -114,3 +114,5 @@ if __name__ == "__main__":
     approximator = QuickApproximator(target, initial_guess, func)
     approximator.train()
     print(f"Final approximation: {approximator.state}")
+
+# %%
